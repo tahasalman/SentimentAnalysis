@@ -114,9 +114,9 @@ def run_naive_bayes_bernoulli():
     f1_valid = bnb.get_f1_measure(validation_data_x,validation_data_y)
     f1_test = bnb.get_f1_measure(testing_data_x,testing_data_y)
 
-    print("The F1-Measure on training data with alpha={} is {}\n".format(alpha,f1_train))
-    print("The F1-Measure on validation data with alpha={} is {}\n".format(alpha,f1_valid))
-    print("The F1-Measure on testing data with alpha={} is {}\n".format(alpha,f1_test))
+    f.write("The F1-Measure on training data with alpha={} is {}\n".format(alpha,f1_train))
+    f.write("The F1-Measure on validation data with alpha={} is {}\n".format(alpha,f1_valid))
+    f.write("The F1-Measure on testing data with alpha={} is {}\n".format(alpha,f1_test))
 
     f.close()
 
@@ -182,9 +182,9 @@ def run_linear_svm():
     f1_valid = lsvc.get_f1_measure(validation_data_x, validation_data_y)
     f1_test = lsvc.get_f1_measure(testing_data_x, testing_data_y)
 
-    print("The F1-Measure on training data with C={} and tol={} is {}\n".format(best_C,best_tol, f1_train))
-    print("The F1-Measure on validation data with C={} and tol={} is {}\n".format(best_C,best_tol, f1_valid))
-    print("The F1-Measure on testing data with C={} and tol={} is {}\n".format(best_C,best_tol, f1_test))
+    f.write("The F1-Measure on training data with C={} and tol={} is {}\n".format(best_C,best_tol, f1_train))
+    f.write("The F1-Measure on validation data with C={} and tol={} is {}\n".format(best_C,best_tol, f1_valid))
+    f.write("The F1-Measure on testing data with C={} and tol={} is {}\n".format(best_C,best_tol, f1_test))
 
     f.close()
 
