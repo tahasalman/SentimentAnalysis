@@ -50,7 +50,7 @@ class LinearSupportVectorClassifier():
             scoring='f1_micro',
             param_grid=param_grid,
             n_jobs=n_jobs,
-            cv=cv
+            cv=cv,
         )
 
         gs.fit(merged_x,merged_y)
@@ -74,14 +74,16 @@ class LinearSupportVectorClassifier():
 
         c_vals = []
         current_c_val = 0.001
+        to_add = True
         while(current_c_val<=10000):
             c_vals.append(current_c_val)
-            current_c_val *= 10
+            if to_add:
+                current_c_val += (current_c_val*4)
+            else:
+                current_c_val *= 10
 
-        param_grid = {"penalty": ['l1', 'l2'],
-                      "loss": ["hinge","squared_hinge"],
-                      "dual": [dual_val],
-                      "tol" : [tol_vals],
+        param_grid = {"dual": [dual_val],
+                      "tol" : tol_vals,
                       "C" : c_vals
                       }
 
