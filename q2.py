@@ -5,6 +5,7 @@ from Classifiers.simple_classifiers import RandomClassifier
 from Classifiers.simple_classifiers import MajorityClassClassifier
 from Classifiers.simple_classifiers import PerformanceTester
 from Classifiers.bnb import BernoulliNaiveBayesClassifier
+from Classifiers.lsvc import LinearSupportVectorClassifier
 
 logging.basicConfig(filename="q2.log",level=logging.INFO)
 
@@ -35,6 +36,9 @@ def run_random_classifier():
     f1s = p_tester.get_F1_score(TESTING_DATA_PATH)
     f.write("The F1 score for this random classifier is {}\n".format(f1s))
 
+    f.close()
+
+
 @logging_wrapper
 def run_majority_class_classifier():
     OUTPUT_PATH = "Outputs/yelp/majority-class-classifier-out.txt"
@@ -52,6 +56,9 @@ def run_majority_class_classifier():
     p_tester = PerformanceTester(predictions)
     f1s = p_tester.get_F1_score(TESTING_DATA_PATH)
     f.write("The F1 score for this Majority Class Classifier is {}\n".format(f1s))
+
+    f.close()
+
 
 @logging_wrapper
 def run_naive_bayes_bernoulli():
@@ -78,16 +85,15 @@ def run_naive_bayes_bernoulli():
     validation_data_y = Data.read_y_array(VALIDATION_DATA_PATH+"-Y.csv")
 
 
+    alpha_start = 0
+    alpha_stop = 1
+    num_intervals = 100
+    alpha_vals = np.linspace(start=alpha_start,stop=alpha_stop,num=num_intervals)
+    f.write("Testing {} alpha values between {} and {}:\n".format(num_intervals,alpha_start,alpha_stop))
 
-    alpha_vals = np.linspace(start=0,stop=1,num=100)
-    f.write("Testing 200 alpha values between 0 and 1:\n")
 
-    #sorted_alpha_vals = bnb.sort_alpha_vals(alpha_vals,validation_data_x,validation_data_y)
-    # f.write(
-    #     "The best alpha value is {} with an F1-Measure of {}".format(sorted_alpha_vals[0][0], sorted_alpha_vals[0][1]))
-
-    best_params,results = bnb.find_best_params(validation_data_x,validation_data_y,alpha_vals)
-    f.write("The best alpha value found was {}\n".best_params["alpha"])
+    best_params,results = bnb.find_best_params(validation_data_x,validation_data_y,alpha_vals,n_jobs=10)
+    f.write("The best alpha value found was {}\n".format(best_params["alpha"]))
     f.write("\nPerformance metrics for all alpha values tested:\n\n")
 
     output = ""
@@ -95,10 +101,65 @@ def run_naive_bayes_bernoulli():
         output+= "Alpha value: " + str(alpha_vals[i]) + " --> F1-Score: " + str(results['mean_test_score'][i]) + "\n"
     f.write(output)
 
+    f.close()
 
+
+@logging_wrapper
+def run_linear_svm():
+    OUTPUT_PATH = "Outputs/yelp/linear-svm-bbow-out.txt"
+    f = open(OUTPUT_PATH, "w")
+
+    TRAINING_DATA_PATH = "Data/BinaryBOW/yelp-train"
+    VALIDATION_DATA_PATH = "Data/BinaryBOW/yelp-valid"
+    TESTING_DATA_PATH = "Data/BinaryBOW/yelp-test"
+
+    f.write("Loading Binary Bag-Of-Words Representation for Training Data\n")
+    training_data_x = Data.read_x_array(TRAINING_DATA_PATH + "-X.csv")
+    training_data_y = Data.read_y_array(TRAINING_DATA_PATH + "-Y.csv")
+
+    f.write("Initializing Linear Support Vector Classifier with training data\n")
+    lsvc = LinearSupportVectorClassifier(
+        training_data_x=training_data_x,
+        training_data_y=training_data_y
+    )
+
+
+    f.write("Loading validation data\n")
+    validation_data_x = Data.read_x_array(VALIDATION_DATA_PATH + "-X.csv")
+    validation_data_y = Data.read_y_array(VALIDATION_DATA_PATH + "-Y.csv")
+
+
+    f.write("Finding the best hyper-parameters:\n")
+    best_params,best_score,results = lsvc.find_best_params(
+        validation_data_x,
+        validation_data_y,
+        n_jobs=10)
+
+    f.write("The best hyper-parameters are as follows: \n")
+    f.write("C: {}\t| dual: {}\t| loss: {}\t| penalty: {}\t| tol: {} with an F1-Measure of {}\n\n".format(
+        best_params['C'],best_params['dual'],best_params['loss'],best_params['penalty'],best_params['tol'],best_score
+    ))
+
+    f.write("\nPerformance metrics for the first 100 hyper-parameters_tested:\n\n")
+    index=0
+    while(index<100 and index<len(results['params'])):
+        f.write("C: {}\t| dual: {}\t| loss: {}\t| penalty: {}\t| tol: {} --> {}\n".format(
+            results['params'][index]['C'],
+            results['params'][index]['dual'],
+            results['params'][index]['loss'],
+            results['params'][index]['penalty'],
+            results['params'][index]['tol'],
+            results['mean_test_score'][index]
+    ))
+        index+=1
+
+    print(best_score)
+
+    f.close()
 
 
 if __name__ == "__main__":
-    run_random_classifier()
-    run_majority_class_classifier()
-    run_naive_bayes_bernoulli()
+    # run_random_classifier()
+    # run_majority_class_classifier()
+    # run_naive_bayes_bernoulli()
+    run_linear_svm()
