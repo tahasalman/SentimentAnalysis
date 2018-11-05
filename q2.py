@@ -136,18 +136,15 @@ def run_linear_svm():
         n_jobs=10)
 
     f.write("The best hyper-parameters are as follows: \n")
-    f.write("C: {}\t| dual: {}\t| loss: {}\t| penalty: {}\t| tol: {} with an F1-Measure of {}\n\n".format(
-        best_params['C'],best_params['dual'],best_params['loss'],best_params['penalty'],best_params['tol'],best_score
+    f.write("C: {}\t| tol: {} with an F1-Measure of {}\n\n".format(
+        best_params['C'],best_params['tol'],best_score
     ))
 
     f.write("\nPerformance metrics for the first 100 hyper-parameters_tested:\n\n")
     index=0
     while(index<100 and index<len(results['params'])):
-        f.write("C: {}\t| dual: {}\t| loss: {}\t| penalty: {}\t| tol: {} --> {}\n".format(
+        f.write("C: {}\t| tol: {} --> {}\n".format(
             results['params'][index]['C'],
-            results['params'][index]['dual'],
-            results['params'][index]['loss'],
-            results['params'][index]['penalty'],
             results['params'][index]['tol'],
             results['mean_test_score'][index]
     ))
