@@ -7,10 +7,10 @@ sys.path.append("../")
 from data_processor import Data
 
 class BernoulliNaiveBayesClassifier():
-    def __init__(self,training_data_x,training_data_y):
+    def __init__(self,training_data_x,training_data_y,alpha=1.0):
         self.training_data_x = training_data_x
         self.training_data_y = training_data_y
-        self.initialize_classifier()
+        self.initialize_classifier(alpha)
 
     def initialize_classifier(self,alpha=1.0):
         self.classifier = BernoulliNB(alpha)

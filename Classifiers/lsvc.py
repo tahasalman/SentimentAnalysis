@@ -12,8 +12,11 @@ class LinearSupportVectorClassifier():
         self.training_data_y = training_data_y
         self.initialize_classifier()
 
-    def initialize_classifier(self,penalty='l2',loss='squared_hinge',dual=True,tol=0.0001,C=1.0,):
-        self.classifier = LinearSVC(penalty=penalty,loss=loss,dual=dual,tol=tol,C=C)
+    def initialize_classifier(self,tol=0.0001,C=1.0):
+        dual_val = True
+        if len(self.training_data_x) > len(self.training_data_x[0]):  # if number of samples > number of features
+            dual_val = False
+        self.classifier = LinearSVC(dual=dual_val,tol=tol,C=C)
 
     def train(self):
         self.classifier.fit(self.training_data_x,self.training_data_y)
