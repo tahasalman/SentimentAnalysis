@@ -1,11 +1,10 @@
 import logging
-import numpy as np
 from data_processor import Data
 from Classifiers.gnb import GaussianNaiveBayesClassifier
 from Classifiers.lsvc import LinearSupportVectorClassifier
 from Classifiers.decision_tree import DecisionTree
 
-logging.basicConfig(filename="q2.log",level=logging.INFO)
+logging.basicConfig(filename="q3.log",level=logging.INFO)
 
 def logging_wrapper(func):
     def inner(*args, **kwargs):
@@ -39,7 +38,7 @@ def run_naive_bayes_gaussian():
     validation_data_x = Data.read_x_array(VALIDATION_DATA_PATH+"-X.csv")
     validation_data_y = Data.read_y_array(VALIDATION_DATA_PATH+"-Y.csv")
 
-    best_params,results = gnb.find_best_params(validation_data_x,validation_data_y,n_jobs=10)
+    best_params,results = gnb.find_best_params(validation_data_x,validation_data_y,n_jobs=1)
     f.write("The best variance smoothing value found was {}\n".format(best_params["var_smoothing"]))
     f.write("\nPerformance metrics for all var_smoothing values tested:\n\n")
 
@@ -98,7 +97,7 @@ def run_linear_svm():
     best_params,best_score,results = lsvc.find_best_params(
         validation_data_x,
         validation_data_y,
-        n_jobs=10)
+        n_jobs=1)
 
     f.write("The best hyper-parameters are as follows: \n")
     f.write("C: {}\t| tol: {} with an F1-Measure of {}\n\n".format(
@@ -210,6 +209,8 @@ def run_decision_tree():
 if __name__ == "__main__":
     logging.info("Starting Q3\n")
     run_naive_bayes_gaussian()
+    logging.info("Done with GNB\n")
     run_linear_svm()
+    logging.info("Done with LSVM\n")
     run_decision_tree()
     logging.info("Done with Q3\n")
