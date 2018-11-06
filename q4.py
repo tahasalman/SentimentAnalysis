@@ -238,10 +238,11 @@ def run_decision_tree():
         index+=1
 
     f.write("\n\nInitializing and training a Decision Tree Classifier with the best parameters \n")
-    best_C = float(best_params['C'])
-    best_tol = float(best_params['tol'])
     dt = DecisionTree(training_data_x, training_data_y)
-    dt.initialize_classifier(tol=best_tol,C=best_C)
+    dt.initialize_classifier(max_depth=best_params['max_depth'],
+                             min_samples_split=best_params['min_samples_split'],
+                             min_samples_leaf=best_params['min_samples_leaf'],
+                             max_features=best_params['max_features'])
     dt.train()
 
     testing_data_x = Data.read_x_array(TESTING_DATA_PATH + "-X.csv")
@@ -252,16 +253,16 @@ def run_decision_tree():
     f1_valid = dt.get_f1_measure(validation_data_x, validation_data_y)
     f1_test = dt.get_f1_measure(testing_data_x, testing_data_y)
 
-    f.write("The F1-Measure on training data with C={} and tol={} is {}\n".format(best_C,best_tol, f1_train))
-    f.write("The F1-Measure on validation data with C={} and tol={} is {}\n".format(best_C,best_tol, f1_valid))
-    f.write("The F1-Measure on testing data with C={} and tol={} is {}\n".format(best_C,best_tol, f1_test))
+    f.write("The F1-Measure on training data with these parameters is {}\n".format(f1_train))
+    f.write("The F1-Measure on validation data with these parameters is {}\n".format(f1_valid))
+    f.write("The F1-Measure on testing data with these parameters is {}\n".format(f1_test))
 
     f.close()
 
 
 if __name__ == "__main__":
-    # run_random_classifier()
-    # run_majority_class_classifier()
-    # run_naive_bayes_bernoulli()
-    # run_linear_svm()
+    run_random_classifier()
+    run_majority_class_classifier()
+    run_naive_bayes_bernoulli()
+    run_linear_svm()
     run_decision_tree()
