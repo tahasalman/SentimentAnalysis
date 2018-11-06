@@ -16,12 +16,12 @@ def logging_wrapper(func):
 
 @logging_wrapper
 def run_naive_bayes_gaussian():
-    OUTPUT_PATH = "Outputs/yelp/naive-bayes-fbow-out.txt"
+    OUTPUT_PATH = "Outputs/IMDB/naive-bayes-fbow-out.txt"
     f = open(OUTPUT_PATH, "w")
 
-    TRAINING_DATA_PATH = "Data/FrequencyBOW/yelp-train"
-    VALIDATION_DATA_PATH = "Data/FrequencyBOW/yelp-valid"
-    TESTING_DATA_PATH = "Data/FrequencyBOW/yelp-test"
+    TRAINING_DATA_PATH = "Data/FrequencyBOW/IMDB-train"
+    VALIDATION_DATA_PATH = "Data/FrequencyBOW/IMDB-valid"
+    TESTING_DATA_PATH = "Data/FrequencyBOW/IMDB-test"
 
     f.write("Loading Frequency Bag-Of-Words Representation for Training Data\n")
     training_data_x = Data.read_x_array(TRAINING_DATA_PATH+"-X.csv")
@@ -71,12 +71,12 @@ def run_naive_bayes_gaussian():
 
 @logging_wrapper
 def run_linear_svm():
-    OUTPUT_PATH = "Outputs/yelp/linear-svm-fbow-out.txt"
+    OUTPUT_PATH = "Outputs/IMDB/linear-svm-fbow-out.txt"
     f = open(OUTPUT_PATH, "w")
 
-    TRAINING_DATA_PATH = "Data/FrequencyBOW/yelp-train"
-    VALIDATION_DATA_PATH = "Data/FrequencyBOW/yelp-valid"
-    TESTING_DATA_PATH = "Data/FrequencyBOW/yelp-test"
+    TRAINING_DATA_PATH = "Data/FrequencyBOW/IMDB-train"
+    VALIDATION_DATA_PATH = "Data/FrequencyBOW/IMDB-valid"
+    TESTING_DATA_PATH = "Data/FrequencyBOW/IMDB-test"
 
     f.write("Loading Frequency Bag-Of-Words Representation for Training Data\n")
     training_data_x = Data.read_x_array(TRAINING_DATA_PATH + "-X.csv")
@@ -139,12 +139,12 @@ def run_linear_svm():
 
 @logging_wrapper
 def run_decision_tree():
-    OUTPUT_PATH = "Outputs/yelp/decision-tree-fbow-out.txt"
+    OUTPUT_PATH = "Outputs/IMDB/decision-tree-fbow-out.txt"
     f = open(OUTPUT_PATH, "w")
 
-    TRAINING_DATA_PATH = "Data/FrequencyBOW/yelp-train"
-    VALIDATION_DATA_PATH = "Data/FrequencyBOW/yelp-valid"
-    TESTING_DATA_PATH = "Data/FrequencyBOW/yelp-test"
+    TRAINING_DATA_PATH = "Data/FrequencyBOW/IMDB-train"
+    VALIDATION_DATA_PATH = "Data/FrequencyBOW/IMDB-valid"
+    TESTING_DATA_PATH = "Data/FrequencyBOW/IMDB-test"
 
     f.write("Loading Frequency Bag-Of-Words Representation for Training Data\n")
     training_data_x = Data.read_x_array(TRAINING_DATA_PATH + "-X.csv")

@@ -63,7 +63,7 @@ class GaussianNaiveBayesClassifier():
     def get_default_param_grid(self):
         var_smoothing = []
         smoothing = 0.00000000001
-        while(smoothing<1):
+        while smoothing<1:
             var_smoothing.append(smoothing)
             smoothing*=10
         return {"var_smoothing":var_smoothing}
