@@ -85,12 +85,11 @@ def run_naive_bayes_bernoulli():
     validation_data_y = Data.read_y_array(VALIDATION_DATA_PATH+"-Y.csv")
 
 
-    alpha_start = 0
-    alpha_stop = 1
-    num_intervals = 200
+    alpha_start = 0.01
+    alpha_stop = 0.99
+    num_intervals = 100
     alpha_vals = np.linspace(start=alpha_start,stop=alpha_stop,num=num_intervals)
     f.write("Testing {} alpha values between {} and {}:\n".format(num_intervals,alpha_start,alpha_stop))
-
 
     best_params,results = bnb.find_best_params(validation_data_x,validation_data_y,alpha_vals,n_jobs=10)
     f.write("The best alpha value found was {}\n".format(best_params["alpha"]))
