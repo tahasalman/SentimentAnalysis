@@ -6,6 +6,7 @@ from Classifiers.simple_classifiers import MajorityClassClassifier
 from Classifiers.simple_classifiers import PerformanceTester
 from Classifiers.bnb import BernoulliNaiveBayesClassifier
 from Classifiers.lsvc import LinearSupportVectorClassifier
+from Classifiers.decision_tree import DecisionTree
 
 logging.basicConfig(filename="q4.log",level=logging.INFO)
 
@@ -188,8 +189,79 @@ def run_linear_svm():
     f.close()
 
 
+@logging_wrapper
+def run_decision_tree():
+    OUTPUT_PATH = "Outputs/IMDB/decision-tree-bbow-out.txt"
+    f = open(OUTPUT_PATH, "w")
+
+    TRAINING_DATA_PATH = "Data/BinaryBOW/IMDB-train"
+    VALIDATION_DATA_PATH = "Data/BinaryBOW/IMDB-valid"
+    TESTING_DATA_PATH = "Data/BinaryBOW/IMDB-test"
+
+    f.write("Loading Binary Bag-Of-Words Representation for Training Data\n")
+    training_data_x = Data.read_x_array(TRAINING_DATA_PATH + "-X.csv")
+    training_data_y = Data.read_y_array(TRAINING_DATA_PATH + "-Y.csv")
+
+    f.write("Initializing Decision Tree Classifier with training data\n")
+    dt = DecisionTree(
+        training_data_x=training_data_x,
+        training_data_y=training_data_y
+    )
+
+
+    f.write("Loading validation data\n")
+    validation_data_x = Data.read_x_array(VALIDATION_DATA_PATH + "-X.csv")
+    validation_data_y = Data.read_y_array(VALIDATION_DATA_PATH + "-Y.csv")
+
+
+    f.write("Finding the best hyper-parameters:\n")
+    best_params,best_score,results = dt.find_best_params(
+        validation_data_x,
+        validation_data_y,
+        n_jobs=1)
+
+    f.write("The best hyper-parameters are as follows: \n")
+    f.write("max_depth: {}\t| min_samples_split: {}\t| min_samples_leaf: {}\t| max_features: {} with an average F1-Measure of {}\n\n".format(
+        best_params['max_depth'],best_params['min_samples_split'],best_params['min_samples_leaf'],best_params['max_features'],best_score
+    ))
+
+    f.write("\nPerformance metrics for the first 100 hyper-parameters_tested:\n\n")
+    index=0
+    while(index<100 and index<len(results['params'])):
+        f.write("max_depth: {}\t| min_samples_split: {}\t| min_samples_leaf: {}\t| max_features: {} --> {}\n".format(
+            results['params'][index]['max_depth'],
+            results['params'][index]['min_samples_split'],
+            results['params'][index]['min_samples_leaf'],
+            results['params'][index]['max_features'],
+            results['mean_test_score'][index]
+    ))
+        index+=1
+
+    f.write("\n\nInitializing and training a Decision Tree Classifier with the best parameters \n")
+    best_C = float(best_params['C'])
+    best_tol = float(best_params['tol'])
+    dt = DecisionTree(training_data_x, training_data_y)
+    dt.initialize_classifier(tol=best_tol,C=best_C)
+    dt.train()
+
+    testing_data_x = Data.read_x_array(TESTING_DATA_PATH + "-X.csv")
+    testing_data_y = Data.read_y_array(TESTING_DATA_PATH + "-Y.csv")
+
+    f.write("Finding F1-Measure for different datasets\n")
+    f1_train = dt.get_f1_measure(training_data_x, training_data_y)
+    f1_valid = dt.get_f1_measure(validation_data_x, validation_data_y)
+    f1_test = dt.get_f1_measure(testing_data_x, testing_data_y)
+
+    f.write("The F1-Measure on training data with C={} and tol={} is {}\n".format(best_C,best_tol, f1_train))
+    f.write("The F1-Measure on validation data with C={} and tol={} is {}\n".format(best_C,best_tol, f1_valid))
+    f.write("The F1-Measure on testing data with C={} and tol={} is {}\n".format(best_C,best_tol, f1_test))
+
+    f.close()
+
+
 if __name__ == "__main__":
     # run_random_classifier()
     # run_majority_class_classifier()
     # run_naive_bayes_bernoulli()
-    run_linear_svm()
+    # run_linear_svm()
+    run_decision_tree()
