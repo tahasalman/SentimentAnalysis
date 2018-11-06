@@ -52,7 +52,7 @@ def run_naive_bayes_gaussian():
 
     f.write("\n\nInitializing and training a Gaussian Naive Bayes Model with best hyper-parameters\n")
     gnb = GaussianNaiveBayesClassifier(training_data_x,training_data_y)
-    gnb.initialize_classifier(best_params['var_smoothing'])
+    gnb.initialize_classifier(var_smoothing=best_params['var_smoothing'])
     gnb.train()
 
     testing_data_x = Data.read_x_array(TESTING_DATA_PATH + "-X.csv")

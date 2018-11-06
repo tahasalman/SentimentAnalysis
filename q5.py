@@ -4,7 +4,7 @@ from Classifiers.gnb import GaussianNaiveBayesClassifier
 from Classifiers.lsvc import LinearSupportVectorClassifier
 from Classifiers.decision_tree import DecisionTree
 
-logging.basicConfig(filename="q3.log",level=logging.INFO)
+logging.basicConfig(filename="q5.log",level=logging.INFO)
 
 def logging_wrapper(func):
     def inner(*args, **kwargs):
@@ -52,7 +52,7 @@ def run_naive_bayes_gaussian():
 
     f.write("\n\nInitializing and training a Gaussian Naive Bayes Model with best hyper-parameters\n")
     gnb = GaussianNaiveBayesClassifier(training_data_x,training_data_y)
-    gnb.initialize_classifier(best_params['var_smoothing'])
+    gnb.initialize_classifier(var_smoothing=best_params['var_smoothing'])
     gnb.train()
 
     testing_data_x = Data.read_x_array(TESTING_DATA_PATH + "-X.csv")
@@ -208,10 +208,10 @@ def run_decision_tree():
     f.close()
 
 if __name__ == "__main__":
-    logging.info("Starting Q3\n")
+    logging.info("Starting Q5\n")
     run_naive_bayes_gaussian()
     logging.info("Done with GNB\n")
     run_linear_svm()
     logging.info("Done with LSVM\n")
     run_decision_tree()
-    logging.info("Done with Q3\n")
+    logging.info("Done with Q5\n")
